@@ -1,100 +1,84 @@
-# Antigravity Remote（反重力手机遥控器 + Gemini MCP 远程通道）
+# Antigravity Remote APP（反重力手机遥控器）
 
-一套用于在手机端远程控制 **Windows 桌面版 Google Antigravity IDE** 的双通道开源方案，包含：
+[中文](#-中文说明) | [English](#-english-documentation)
 
-1. **反重力手机遥控 APP（`android/`）**：原生 Android 客户端，随时随地在手机上查看/新建项目与会话、切换真实模型、发指令、全盘双向传文件、内置断点下载、对话内直接预览图片与下载产物。
-2. **Gemini 手机 APP ↔ Antigravity Remote MCP 桥接（`server/mcp_bridge.py`）**：将本地 Antigravity 封装为标准的 Streamable HTTP Remote MCP Server（内置 OAuth 2.1 + PKCE + RFC 7591 动态客户端注册），可直接接入手机端/网页端 Gemini App 的「+ 自定义」工具，让 Gemini 直接指挥云电脑里的 Antigravity 干活。
-
----
-
-## ⚠️ 部署环境硬性说明（必看）
-
-本系统**不是纯本地单机玩具**，要实现手机端随时随地远程控制，**必须具备两套环境配合**：
-
-1. **一台 24 小时在线的 Windows 云电脑 / 桌面主机**
-   - 用于运行 **Google Antigravity 桌面端**、`agentapi.bat` 以及本项目的 **FastAPI 网关（`server/gateway.py`）**。
-   - 因为 Antigravity 本身是桌面端 IDE，必须依赖这台 Windows 主机提供真实的本地工作区、终端和运行环境。
-2. **公网穿透 / 公网服务器（以下二选一，或主备双通道）**
-   - **方案 A（推荐）：Cloudflare Tunnel（需自有域名托管在 Cloudflare）**
-     - 无需公网独立 IP，通过 `cloudflared` 将云电脑本地 `127.0.0.1:18900` 穿透到你自己的 HTTPS 域名（如 `https://ctl.example.com`）。
-     - **注意**：如果要接入 **Gemini 手机 APP 的自定义 MCP**，**必须提供带有效 HTTPS 证书的公网域名**，Cloudflare Tunnel 是最省心的方案。
-   - **方案 B：一台具备公网 IP 的云服务器（VPS）+ FRP 内网穿透**
-     - 如果不使用 Cloudflare Tunnel，你需要一台自己的公网服务器运行 `frps`（搭配 Nginx HTTPS 反代，或直接暴露端口给 Android APP 作为备用直连通道）。
-
-### 整体架构图
-
-```text
-[手机端]
-  ├─ 反重力遥控 APP (Android) ──────(HTTPS / x-auth-token)──┐
-  └─ Gemini 手机 APP («+ 自定义» MCP) ──(OAuth 2.1 / Bearer)──┤
-                                                              ▼
-                  公网 HTTPS 入口（Cloudflare Tunnel 或 公网服务器+FRP）
-                                                              │
-                                                              ▼
-[Windows 云电脑] FastAPI 网关 (server/gateway.py @ 127.0.0.1:18900)
-  ├─ /api/*  ── 反重力遥控 APP 接口（项目/会话/模型/上传/全盘文件/停止/健康）
-  ├─ /mcp    ── Gemini Remote MCP Server (server/mcp_bridge.py)
-  └─ 调度底层：Antigravity hub_*.json LanguageServer RPC + agentapi.bat
-```
+> 如果你需要通过 **Gemini 手机 APP** 直接远程指挥云电脑里的 Antigravity，请移步配套项目：[**antigravity-gemini-mcp**](https://github.com/zz327455573/antigravity-gemini-mcp)  
+> Looking to control Antigravity directly from the **Gemini Mobile App** via Remote MCP? See the companion repo: [**antigravity-gemini-mcp**](https://github.com/zz327455573/antigravity-gemini-mcp)
 
 ---
 
-## 核心功能
+## 🇨🇳 中文说明
 
-### 1. 反重力手机遥控 APP（`android/`）
-- **项目与会话管理**：新建项目、切换工作区、展开项目历史会话、新建独立会话。
-- **真实模型实时切换**：自动拉取桌面端可用模型列表与剩余额度。
-- **流式上传与全盘文件互传**：
-  - 对话底部 `+` 支持流式带进度条上传图片/文件到云电脑 `<project>/_mobile_uploads/`。
-  - 底部 `文件` 支持浏览云电脑桌面、C 盘、D 盘等所有目录，双向传文件。
-- **内置前台服务断点下载（`DownloadService.java`）**：绕开系统下载器无鉴权/易断流问题，切后台或锁屏不断连，自动保存至手机 `Download/反重力遥控/`。
-- **对话交互优化**：支持气泡长按自由选字、一键复制、自动识别 AI 回复中的 `file:///` 链接并渲染为图片预览/下载卡片。
+**Antigravity Remote APP** 是一套原生 Android 手机遥控客户端 + Windows 本地 FastAPI 网关，让你随时随地在手机上操控桌面端 **Google Antigravity IDE**。
 
-### 2. Gemini 手机 APP Remote MCP（`server/mcp_bridge.py`）
-- **标准认证**：内置 OAuth 2.1（Authorization Code + PKCE + RFC 7591 动态注册），自动暴露 `/.well-known/oauth-protected-resource` 与 `/.well-known/oauth-authorization-server`，Access Token 默认 30 天、Refresh Token 180 天。
-- **暴露的 9 个 MCP 工具**：
-  - `list_projects` / `list_conversations` / `check_server_health`
-  - `create_and_send_task` / `send_message` / `get_task_result` / `stop_task`
-  - `list_files` / `read_file_snippet`
-- **适配移动端长短任务**：
-  - 快速任务（<50s）可传 `wait_seconds=45`（上限 50s）单回合同步拿到结果；
-  - 长耗时任务传 `wait_seconds=0` 异步派发拿 `conversation_id`，后续用 `get_task_result` 分段读取。
+### ⚠️ 部署环境硬性要求（必看）
+本系统不是单机玩具，要实现手机随时随地远程控制，**必须具备两套环境配合**：
+1. **一台 24 小时在线的 Windows 云电脑 / 桌面主机**：运行 Google Antigravity IDE 本体、`agentapi.bat` 以及本项目 `server/gateway.py`（监听 `127.0.0.1:18900`）。
+2. **公网穿透 / 公网服务器（二选一，或主备双通道）**：
+   - **方案 A（推荐）：Cloudflare Tunnel**（需自有域名托管在 Cloudflare），通过 `cloudflared` 将本地 `18900` 端口安全映射到 HTTPS 域名。
+   - **方案 B：一台具备公网 IP 的云服务器（VPS）+ FRP 内网穿透**，将本地 `18900` 端口转发到公网服务器供手机直连。
 
----
+### 核心功能
+- **项目与会话管理**：新建/切换工作区项目、展开项目历史会话、新建独立会话。
+- **真实模型实时切换**：自动同步桌面端可用模型列表与剩余额度。
+- **流式上传与全盘文件互传**：对话 `+` 流式带进度上传附件到 `<project>/_mobile_uploads/`；底部 `文件` 支持浏览云电脑桌面、C 盘、D 盘等所有目录并双向传文件。
+- **内置前台服务断点下载（`DownloadService.java`）**：自带鉴权头与断点续传，切后台/锁屏不断连，保存至手机 `Download/反重力遥控/`。
+- **对话体验优化**：气泡支持长按自由选字、一键复制，自动识别 AI 回复中的 `file:///` 链接并渲染为图片预览与下载卡片。
 
-## 快速部署
-
-### 第一步：云电脑启动网关
-1. 进入 `server/` 目录，安装依赖：
+### 快速部署
+1. **云电脑端启动网关**：
    ```bash
+   cd server
    pip install -r requirements.txt
-   ```
-2. 复制配置模板并修改强密码与工作区根目录：
-   ```bash
    copy config.example.json config.json
    ```
-   编辑 `server/config.json`，将 `auth_token` 改为你的强密码，`workspace_roots` 改为你的实际工作区路径。
-3. 确保桌面上 **Antigravity IDE 已启动**，运行网关：
-   ```bash
-   python gateway.py
-   ```
-   *(可选：配合 Windows 计划任务定时运行 `watch_gateway.py` 与 `watch_cloudflared.py`，实现无黑框后台保活。)*
-
-### 第二步：打通公网穿透（以 Cloudflare Tunnel 为例）
-1. 在 Cloudflare Zero Trust 创建 Tunnel（如 `agy-remote`），将你的 HTTPS 子域名（如 `https://ctl.example.com`）指向 `http://localhost:18900`。
-2. 在云电脑运行 `cloudflared tunnel run agy-remote`。
-3. 接入 Gemini App：在 Gemini 手机/网页端添加自定义 MCP，地址填 `https://你的域名/mcp`，按提示跳转到授权页输入 `config.json` 中的 `auth_token` 即可完成 OAuth 绑定。
-
-### 第三步：编译安卓端（`android/`）
-1. 使用 Android Studio 或 Gradle 打开 `android/` 目录：
+   编辑 `server/config.json`，修改强密码 `auth_token` 和你的工作区路径 `workspace_roots`，确保桌面 Antigravity IDE 已启动后运行 `python gateway.py`（可选配合 `watch_gateway.py`、`watch_cloudflared.py` 做后台无黑框保活）。
+2. **配置公网穿透**：将 Cloudflare Tunnel 或公网服务器 FRP 指向本地 `http://127.0.0.1:18900`。
+3. **编译安装 Android APK**：
    ```bash
    cd android
    ./gradlew assembleDebug
    ```
-2. 将生成的 APK 安装到手机，打开右上角设置填入你的服务器地址（`https://你的域名` 或公网服务器地址）与 `auth_token` 即可使用。
+   安装 APK 后，在 APP 右上角设置中填入你的公网地址和 `auth_token` 即可使用。
 
 ---
 
-## 安全提醒
-- **切勿提交敏感文件**：`server/config.json`、`server/oauth_store.json` 已被 `.gitignore` 忽略，请勿将真实域名、公网 IP、网关密码或 OAuth 令牌提交到公开仓库。
-- **远程自改保护**：请勿在通过网关或 Gemini MCP 派发的远程会话中让 AI 直接修改或重启 `gateway.py` / `mcp_bridge.py`，否则会中断当前连接。
+## 🇺🇸 English Documentation
+
+**Antigravity Remote APP** is a native Android remote control client paired with a Windows FastAPI gateway, enabling you to control your desktop **Google Antigravity IDE** from anywhere on your phone.
+
+### ⚠️ Required Infrastructure (Must Read)
+Remote mobile access requires **two environments working together**:
+1. **An Always-On Windows Cloud PC / Desktop Host**: Runs the Google Antigravity IDE, `agentapi.bat`, and `server/gateway.py` (listening on `127.0.0.1:18900`).
+2. **Public Tunnel / Public Server (Choose one, or use both as primary + fallback)**:
+   - **Option A (Recommended): Cloudflare Tunnel** (requires a domain on Cloudflare) mapping local `18900` to an HTTPS endpoint via `cloudflared`.
+   - **Option B: A Public VPS Server + FRP** forwarding `18900` to a public IP/port.
+
+### Key Features
+- **Project & Conversation Management**: Create/switch projects, expand project sessions, or start standalone conversations.
+- **Live Model Switching**: Fetches real-time available models and remaining quotas from the desktop IDE.
+- **Streaming Upload & Full-Disk File Manager**: Upload files/images with live progress bars (`+`), browse Cloud PC drives/Desktop, and transfer files bidirectionally.
+- **Built-in Foreground Resumable Downloader (`DownloadService.java`)**: Authenticated chunked downloads that survive backgrounding/screen-off, saved to `Download/反重力遥控/`.
+- **Chat UX**: Long-press partial text selection, one-tap copy, and automatic inline image preview / file download cards for `file:///` links in AI replies.
+
+### Quick Start
+1. **Start the Gateway on Windows Cloud PC**:
+   ```bash
+   cd server
+   pip install -r requirements.txt
+   copy config.example.json config.json
+   ```
+   Set a strong `auth_token` and your `workspace_roots` in `server/config.json`. Start Antigravity IDE, then run `python gateway.py` (optionally use `watch_gateway.py` & `watch_cloudflared.py` for silent background keepalive).
+2. **Expose via Public Tunnel / VPS**: Point Cloudflare Tunnel or FRP to `http://127.0.0.1:18900`.
+3. **Build & Install Android APK**:
+   ```bash
+   cd android
+   ./gradlew assembleDebug
+   ```
+   Install the APK and enter your public URL + `auth_token` in the app's settings dialog.
+
+---
+
+## 🔒 安全提醒 / Security Notice
+请勿将 `server/config.json`、真实域名、公网 IP 或任何密钥提交到公开仓库。  
+Never commit `server/config.json`, private domains, public IPs, or tokens to a public repository.

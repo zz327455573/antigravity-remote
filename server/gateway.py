@@ -801,25 +801,6 @@ async def gso_proxy(subpath: str, request: Request):
         raise HTTPException(status_code=502, detail=f"GSO 服务未启动或异常: {e}")
 
 
-from mcp_bridge import create_mcp_router
-
-app.include_router(
-    create_mcp_router(
-        load_config_fn=load_config,
-        list_projects_fn=list_projects,
-        list_conversations_fn=list_conversations,
-        create_conversation_fn=create_conversation,
-        get_messages_fn=get_conversation_messages,
-        send_message_fn=send_message,
-        list_files_fn=list_files,
-        health_fn=get_server_health,
-        stop_task_fn=stop_conversation,
-        create_conv_req_cls=CreateConversationReq,
-        send_msg_req_cls=SendMessageReq,
-    )
-)
-
-
 if __name__ == "__main__":
     import sys
     try:
