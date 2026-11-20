@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="start"
+    android:orientation="vertical"
+    android:paddingVertical="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:background="@color/bg_ai_card"
+        android:elevation="1dp"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <!-- 可折叠的过程详情 -->
+        <TextView
+            android:id="@+id/tvProcessToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="@color/bg_process_chip"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="6dp"
+            android:text="⚙ 干活过程（点击展开） ▸"
+            android:textColor="@color/accent_blue"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvProcessDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="#F8FAFC"
+            android:padding="8dp"
+            android:textColor="@color/text_secondary"
+            android:textIsSelectable="true"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvAiContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingMultiplier="1.2"
+            android:textColor="@color/text_primary"
+            android:textIsSelectable="true"
+            android:textSize="15sp" />
+
+        <!-- AI 回复里附带的文件/图片卡片 -->
+        <LinearLayout
+            android:id="@+id/layoutAiAttachments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="end">
+
+            <TextView
+                android:id="@+id/btnCopyAi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#F3F4F6"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:text="📋 复制结果"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

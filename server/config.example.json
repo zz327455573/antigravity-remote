@@ -1,0 +1,9 @@
+{
+  "host": "0.0.0.0",
+  "port": 18900,
+  "auth_token": "CHANGE_ME_STRONG_PASSWORD",
+  "workspace_roots": [
+    "D:\\YourWorkspace"
+  ],
+  "default_model": "MODEL_PLACEHOLDER_M526"
+}

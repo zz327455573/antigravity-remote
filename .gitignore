@@ -1,0 +1,20 @@
+# Secrets & Runtime State
+server/config.json
+server/oauth_store.json
+server/*.log
+server/*.pid
+server/__pycache__/
+*.pyc
+
+# Android Build & Local IDE
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+*.apk
+*.aab
+*.keystore
+*.jks
+.DS_Store
+Thumbs.db
