@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Antigravity Remote — App Screens</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#1a1b26; display:flex; gap:36px; justify-content:center; align-items:center; min-height:100vh; font-family:-apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding:40px 20px; }
+  .screen-wrap { display:flex; flex-direction:column; align-items:center; gap:12px; }
+  .screen-wrap .cap { color:#a9b1d6; font-size:13px; font-weight:600; letter-spacing:.3px; }
+  .phone { background:#0d0e14; border-radius:40px; padding:12px; box-shadow:0 24px 60px rgba(0,0,0,.55), inset 0 0 0 2px #2a2c3d; width:340px; }
+  .notch { width:110px; height:24px; background:#0d0e14; border-radius:0 0 16px 16px; margin:-12px auto 8px; border:2px solid #2a2c3d; border-top:none; }
+  .app { background:#12131c; border-radius:28px; overflow:hidden; height:640px; display:flex; flex-direction:column; }
+  /* ---- shared bars ---- */
+  .topbar { display:flex; align-items:center; gap:10px; padding:14px 16px; background:#161722; }
+  .topbar .brand { font-size:15px; font-weight:700; color:#e8eaf6; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .topbar .ic { width:26px; height:26px; border-radius:8px; background:#2a2e45; color:#aab2ff; font-size:13px; display:flex; align-items:center; justify-content:center; }
+  .chip { background:#232842; color:#aab2ff; font-size:11px; font-weight:600; padding:3px 8px; border-radius:20px; }
+  .status { display:flex; justify-content:space-between; padding:6px 18px; font-size:10px; color:#5a6085; }
+  /* ---- home: conversations ---- */
+  .list { flex:1; overflow:hidden; padding:6px 12px; display:flex; flex-direction:column; gap:8px; }
+  .conv { background:#181a28; border-radius:14px; padding:11px 12px; }
+  .conv .t { color:#dfe2f5; font-size:12.5px; font-weight:600; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .conv .s { color:#6b7288; font-size:10.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .conv.active { border:1px solid #4f5bd5; background:#1b2040; }
+  .conv.active .t { color:#c8d0ff; }
+  /* ---- chat ---- */
+  .chat { flex:1; overflow:hidden; padding:10px 12px; display:flex; flex-direction:column; gap:9px; }
+  .bubble { max-width:82%; padding:9px 11px; border-radius:16px; font-size:12px; line-height:1.5; }
+  .bubble.user { align-self:flex-end; background:#4f5bd5; border-bottom-right-radius:4px; color:#fff; }
+  .bubble.ai { align-self:flex-start; background:#1d2032; border-bottom-left-radius:4px; color:#d7daee; }
+  .bubble .mono { font-family:ui-monospace, Menlo, Consolas, monospace; font-size:10.5px; background:#0d0f18; border-radius:8px; padding:7px 9px; margin:6px 0; white-space:pre; overflow:hidden; color:#8df3b0; }
+  .bubble .filecard { display:flex; align-items:center; gap:9px; background:#12141f; border:1px solid #2a2e45; border-radius:12px; padding:8px 10px; margin-top:7px; }
+  .filecard .fic { width:30px; height:34px; border-radius:6px; background:#3b2b8f; display:flex; align-items:center; justify-content:center; font-size:11px; color:#cdd3ff; }
+  .filecard .fm { flex:1; min-width:0; }
+  .filecard .fn { color:#e6e9ff; font-size:11px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .filecard .fs { color:#6b7288; font-size:9.5px; }
+  .dltick { color:#5ee0a8; font-size:10px; margin-left:4px; }
+  .inputbar { display:flex; align-items:center; gap:8px; padding:11px 14px; background:#161722; border-top:1px solid #1e2130; }
+  .inputbar .field { flex:1; background:#1b1d2e; border-radius:22px; padding:8px 14px; font-size:12px; color:#8d93b0; }
+  .inputbar .btn { width:30px; height:30px; border-radius:50%; background:#4f5bd5; color:#fff; font-size:14px; display:flex; align-items:center; justify-content:center; }
+  .inputbar .btn.cam { background:#232842; color:#aab2ff; }
+  /* ---- files ---- */
+  .pathtop { display:flex; align-items:center; gap:7px; padding:9px 14px; background:#161722; font-size:11.5px; color:#7d84a8; white-space:nowrap; overflow:hidden; }
+  .pathtop b { color:#c3c9ef; font-weight:600; }
+  .filedir { display:flex; flex-direction:column; padding:6px 12px; gap:2px; flex:1; overflow:hidden; }
+  .frow { display:flex; align-items:center; gap:10px; padding:9px 8px; border-radius:10px; }
+  .frow:hover { background:#181a28; }
+  .frow .fic { width:26px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:10px; color:#dfe2f5; }
+  .frow.dir .fic { background:#2a3560; }
+  .frow.file .fic { background:#2f2a5e; }
+  .frow .nm { flex:1; color:#d7daee; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .frow .sz { color:#61688c; font-size:10px; }
+  .frow.dl { animation: hl 1.2s infinite alternate; }
+  @keyframes hl { from { background:#181a28; } to { background:#232a5e; } }
+  .frow .prog { width:90px; height:6px; border-radius:4px; background:#23263c; overflow:hidden; }
+  .frow .prog i { display:block; height:100%; width:68%; background:linear-gradient(90deg,#4f5bd5,#7d8dff); border-radius:4px; }
+  /* ---- models ---- */
+  .sheet { position:absolute; bottom:0; left:0; right:0; background:#14151f; border-radius:22px 22px 0 0; padding:14px; box-shadow:0 -10px 40px rgba(0,0,0,.5); }
+  .sheet .grab { width:36px; height:4px; border-radius:2px; background:#31344e; margin:0 auto 12px; }
+  .mrow { display:flex; align-items:center; gap:9px; padding:10px 11px; border-radius:12px; }
+  .mrow.on { background:#1e2350; border:1px solid #4f5bd5; }
+  .mrow .b { color:#dfe2f5; font-size:12.5px; font-weight:600; flex:1; }
+  .mrow .s { color:#6b7288; font-size:10px; }
+  .mrow .dot { width:8px; height:8px; border-radius:50%; background:#5ee0a8; }
+  .foot { display:flex; align-items:center; justify-content:space-around; padding:11px 0 15px; background:#14151f; border-top:1px solid #1c1e2e; }
+  .foot .ft { color:#4b5378; font-size:10px; text-align:center; }
+  .foot .ft.on { color:#aab2ff; }
+  .foot .ft .i { font-size:15px; display:block; margin-bottom:2px; }
+</style>
+</head>
+<body>
+
+<div class="screen-wrap">
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="app">
+      <div class="status"><span>9:41</span><span>▲ 5G 98%</span></div>
+      <div class="topbar">
+        <span class="ic">☰</span>
+        <span class="brand">wenda-workspace</span>
+        <span class="chip">● 运行中</span>
+      </div>
+      <div class="list">
+        <div class="conv"><div class="t">📂 门窗报价批量生成</div><div class="s">帮我按最新铝材价重算 6 个客户报价…</div></div>
+        <div class="conv active"><div class="t">🖥️ 反重力遥控 · 会话区</div><div class="s">流式 1.2k tok/s · agent-beta.2</div></div>
+        <div class="conv"><div class="t">🧮 下料单校验</div><div class="s">校验 D:\wenda\cut 下 48 张下料单…</div></div>
+        <div class="conv"><div class="t">📄 报价单 OCR</div><div class="s">已识别 12 页，等待确认…</div></div>
+        <div class="conv"><div class="t">🖼️ 阳台效果图</div><div class="s">图生图 · 893 完成</div></div>
+      </div>
+      <div class="inputbar">
+        <span class="btn cam">＋</span>
+        <span class="field">向 Antigravity 下达指令…</span>
+        <span class="btn">➤</span>
+      </div>
+      <div class="foot">
+        <span class="ft on"><span class="i">💬</span>会话</span>
+        <span class="ft"><span class="i">📁</span>文件</span>
+        <span class="ft"><span class="i">🤖</span>模型</span>
+      </div>
+    </div>
+  </div>
+  <div class="cap">① 会话管理</div>
+</div>
+
+<div class="screen-wrap">
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="app" style="position:relative">
+      <div class="status"><span>9:42</span><span>▲ 5G 98%</span></div>
+      <div class="topbar">
+        <span class="ic">‹</span>
+        <span class="brand">文件 · D:\</span>
+        <span class="chip">推送中</span>
+      </div>
+      <div class="pathtop">📌 <b>D:</b>\ <b>wenda</b>\ material\ quote\ …</div>
+      <div class="filedir">
+        <div class="frow dir"><span class="fic">📁</span><span class="nm">2026 报价</span><span class="sz">18 items</span></div>
+        <div class="frow dir"><span class="fic">📁</span><span class="nm">cut-sheets</span><span class="sz">48 sheets</span></div>
+        <div class="frow dir"><span class="fic">📁</span><span class="nm">render-output</span><span class="sz">9 files</span></div>
+        <div class="frow file dl"><span class="fic">📄</span><span class="nm">quote-1122-final.pdf</span><span class="sz">2.4 MB</span><div class="prog"><i></i></div></div>
+        <div class="frow file"><span class="fic">📄</span><span class="nm">cut-448.skp</span><span class="sz">6.1 MB</span></div>
+        <div class="frow file"><span class="fic">🖼️</span><span class="nm">render-03.png</span><span class="sz">4.8 MB</span></div>
+        <div class="frow file"><span class="fic">📄</span><span class="nm">materials.csv</span><span class="sz">64 KB</span></div>
+        <div class="frow file"><span class="fic">📄</span><span class="nm">debug-log.txt</span><span class="sz">38 MB</span></div>
+      </div>
+      <div class="foot">
+        <span class="ft on"><span class="i">💬</span>会话</span>
+        <span class="ft on"><span class="i">📁</span>文件</span>
+        <span class="ft"><span class="i">🤖</span>模型</span>
+      </div>
+    </div>
+  </div>
+  <div class="cap">② 全盘文件管理 · 双向传输</div>
+</div>
+
+<div class="screen-wrap">
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="app" style="position:relative">
+      <div class="status"><span>9:43</span><span>▲ 5G 98%</span></div>
+      <div class="topbar">
+        <span class="ic">‹</span>
+        <span class="brand">Antigravity Remote</span>
+        <span class="chip">模型</span>
+      </div>
+      <div class="chat">
+        <div class="bubble user">把 file:///D:/wenda/quote.pdf 整理成表格，并生成最新报价单</div>
+        <div class="bubble ai">已读取报价单，正在整理…
+          <div class="filecard"><span class="fic">📄</span><span class="fm"><span class="fn">quote-1122-final.pdf</span><span class="fs">2.4 MB · 生成完成</span></span><span class="dltick">✓</span></div>
+        </div>
+        <div class="bubble ai">共 6 项报价已按铝材最新价更新，差异总 +1,820 元。
+          <div class="mono">diff /wenda/quotes/*
+            6 files scanned
+            +¥1,820 total
+          </div>
+        </div>
+        <div class="bubble ai">需要我把新报价表发到你手机吗？</div>
+      </div>
+      <div class="inputbar">
+        <span class="btn cam">＋</span>
+        <span class="field">发送消息…</span>
+        <span class="btn">➤</span>
+      </div>
+      <div class="sheet">
+        <div class="grab"></div>
+        <div class="mrow on"><span class="b">agent-beta.2</span><span class="s">准星模型 · 剩余 82%</span><span class="dot"></span></div>
+        <div class="mrow"><span class="b">gemini-2.5-pro</span><span class="s">深度推理 · 剩余 45%</span></div>
+        <div class="mrow"><span class="b">gemini-2.5-flash</span><span class="s">快速 · 剩余 90%</span></div>
+        <div class="mrow"><span class="b">claude-sonnet</span><span class="s">代码增强 · 剩余 61%</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="cap">③ 真实模型实时切换 · 额度可见</div>
+</div>
+
+</body>
+</html>

@@ -9,6 +9,14 @@
 
 ---
 
+## What it looks like
+
+![App screens](docs/app-banner.png)
+
+*Conversation management · full-disk file manager · live model switching with remaining quota*
+
+---
+
 ## What this is
 
 A **native Android client** plus a **local Windows gateway** that puts your running Google Antigravity session on your phone. The IDE keeps running on the machine where your code lives — your phone just becomes a live remote for it.
