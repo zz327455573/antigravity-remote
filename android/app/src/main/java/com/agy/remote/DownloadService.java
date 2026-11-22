@@ -187,11 +187,11 @@ public class DownloadService extends Service {
             NotificationCompat.Builder doneNotif = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_app_logo)
                     .setContentTitle("下载完成: " + filename)
-                    .setContentText("已保存到 Download/反重力遥控，点击打开")
+                    .setContentText("已保存到 Download/AntigravityRemote，点击打开")
                     .setContentIntent(pi)
                     .setAutoCancel(true);
             nm.notify(notifId + 10000, doneNotif.build());
-            mainHandler.post(() -> Toast.makeText(this, "下载完成: Download/反重力遥控/" + filename, Toast.LENGTH_LONG).show());
+            mainHandler.post(() -> Toast.makeText(this, "下载完成: Download/AntigravityRemote/" + filename, Toast.LENGTH_LONG).show());
         } catch (Exception e) {
             mainHandler.post(() -> Toast.makeText(this, "保存文件失败: " + e.getMessage(), Toast.LENGTH_LONG).show());
         }
@@ -218,7 +218,7 @@ public class DownloadService extends Service {
             ContentValues values = new ContentValues();
             values.put(MediaStore.Downloads.DISPLAY_NAME, filename);
             values.put(MediaStore.Downloads.MIME_TYPE, guessMime(filename));
-            values.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/反重力遥控");
+            values.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/AntigravityRemote");
             ContentResolver cr = getContentResolver();
             Uri uri = cr.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
             if (uri == null) throw new Exception("MediaStore insert returned null");

@@ -664,7 +664,7 @@ public class MainActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMarginStart(16);
         btnFrp.setLayoutParams(lp);
-        btnFrp.setOnClickListener(v -> etUrl.setText("http://your-vps-ip:62889"));
+        btnFrp.setOnClickListener(v -> etUrl.setText("http://your-vps-ip:8080"));
 
         quickRow.addView(btnCf);
         quickRow.addView(btnFrp);
