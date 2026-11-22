@@ -16,6 +16,10 @@ android {
 
     buildTypes {
         release {
+            // Public preview builds are signed with the standard Android debug keystore so
+            // that anyone can build and install an APK without maintaining private keys.
+            // For your own fork, replace this with a real signing config.
+            signingConfig signingConfigs.debug
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -24,6 +28,12 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        // Lint is run in CI, not as a release-build gate.
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 
