@@ -78,6 +78,8 @@ Close the laptop lid and the session pauses. That's the whole constraint.
 
 ## Architecture
 
+![Architecture](docs/architecture.svg)
+
 ```
   Phone (Android)                        Windows host
   ┌───────────────┐   HTTPS     ┌──────────────────────────────┐

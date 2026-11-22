@@ -1,0 +1,74 @@
+<svg width="860" height="480" viewBox="0 0 860 480" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arw" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#57606a"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="860" height="480" fill="#ffffff"/>
+  <text x="430" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#24292f">Antigravity Remote — Architecture</text>
+  <text x="430" y="56" text-anchor="middle" font-size="13" fill="#57606a">Native Android client  ·  local Windows gateway  ·  authenticated tunnel</text>
+
+  <!-- Left zone: Phone -->
+  <rect x="30" y="86" width="230" height="360" rx="18" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="145" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#24292f">📱 Phone (Android 8+)</text>
+  <text x="145" y="130" text-anchor="middle" font-size="11" fill="#57606a">Antigravity Remote APK</text>
+
+  <rect x="52" y="146" width="186" height="52" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+  <text x="145" y="166" text-anchor="middle" font-size="12" font-weight="600" fill="#24292f">Session list & chat</text>
+  <text x="145" y="184" text-anchor="middle" font-size="10" fill="#57606a">projects · history · streaming</text>
+
+  <rect x="52" y="208" width="186" height="52" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+  <text x="145" y="228" text-anchor="middle" font-size="12" font-weight="600" fill="#24292f">Full-disk file manager</text>
+  <text x="145" y="246" text-anchor="middle" font-size="10" fill="#57606a">browse C:\ D:\ desktop · upload ⇅</text>
+
+  <rect x="52" y="270" width="186" height="52" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+  <text x="145" y="290" text-anchor="middle" font-size="12" font-weight="600" fill="#24292f">Resumable downloads</text>
+  <text x="145" y="308" text-anchor="middle" font-size="10" fill="#57606a">foreground service · screen-off safe</text>
+
+  <rect x="52" y="332" width="186" height="52" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+  <text x="145" y="352" text-anchor="middle" font-size="12" font-weight="600" fill="#24292f">Live model switching</text>
+  <text x="145" y="370" text-anchor="middle" font-size="10" fill="#57606a">real quota from desktop IDE</text>
+
+  <text x="145" y="416" text-anchor="middle" font-size="10.5" fill="#6e7781">token · settings</text>
+
+  <!-- Middle zone: Network -->
+  <rect x="292" y="160" width="276" height="46" rx="10" fill="#ffffff" stroke="#0969da" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="430" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#0969da">Cloudflare Tunnel / VPS FRP</text>
+  <text x="430" y="198" text-anchor="middle" font-size="11" fill="#57606a">HTTPS · auth_token · loopback only</text>
+
+  <!-- Right zone: Windows host -->
+  <rect x="600" y="86" width="230" height="360" rx="18" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="715" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#24292f">🖥️ Windows host</text>
+  <text x="715" y="130" text-anchor="middle" font-size="11" fill="#57606a">any powered-on machine</text>
+
+  <rect x="622" y="146" width="186" height="52" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+  <text x="715" y="166" text-anchor="middle" font-size="12" font-weight="600" fill="#24292f">gateway.py · :18900</text>
+  <text x="715" y="184" text-anchor="middle" font-size="10" fill="#57606a">FastAPI · auth · routes files</text>
+
+  <rect x="622" y="208" width="186" height="52" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+  <text x="715" y="228" text-anchor="middle" font-size="12" font-weight="600" fill="#24292f">agentapi.bat</text>
+  <text x="715" y="246" text-anchor="middle" font-size="10" fill="#57606a">local Antigravity interface</text>
+
+  <rect x="622" y="270" width="186" height="76" rx="8" fill="#ffffff" stroke="#0969da" stroke-width="1.5"/>
+  <text x="715" y="292" text-anchor="middle" font-size="13" font-weight="700" fill="#0969da">Antigravity IDE</text>
+  <text x="715" y="310" text-anchor="middle" font-size="11" fill="#24292f">agent runs here</text>
+  <text x="715" y="328" text-anchor="middle" font-size="10" fill="#57606a">your quota · your workspace</text>
+
+  <rect x="622" y="356" width="186" height="52" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+  <text x="715" y="376" text-anchor="middle" font-size="12" font-weight="600" fill="#24292f">Your files on disk</text>
+  <text x="715" y="394" text-anchor="middle" font-size="10" fill="#57606a">desktop · C:\ · D:\ · any dir</text>
+
+  <text x="715" y="432" text-anchor="middle" font-size="10.5" fill="#6e7781">stay powered on = everything else optional</text>
+
+  <!-- Arrows -->
+  <line x1="266" y1="190" x2="288" y2="190" stroke="#57606a" stroke-width="2" marker-end="url(#arw)"/>
+  <line x1="294" y1="200" x2="272" y2="200" stroke="#57606a" stroke-width="2" marker-end="url(#arw)"/>
+  <line x1="572" y1="190" x2="596" y2="190" stroke="#57606a" stroke-width="2" marker-end="url(#arw)"/>
+  <line x1="600" y1="200" x2="578" y2="200" stroke="#57606a" stroke-width="2" marker-end="url(#arw)"/>
+
+  <text x="430" y="462" text-anchor="middle" font-size="11" fill="#6e7781">No cloud PC required — any Windows machine that stays on. The agent never leaves your machine.</text>
+</svg>
