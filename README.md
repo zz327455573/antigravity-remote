@@ -86,6 +86,8 @@ Close the laptop lid and the session pauses. That's the whole constraint.
 
 ## Architecture
 
+![Dual-Channel Ecosystem](docs/dual-channel-ecosystem.png)
+
 ![Architecture](docs/architecture.svg)
 
 ```
@@ -197,7 +199,7 @@ Yes. Any network the tunnel is reachable from.
 
 ## Related
 
-- [**antigravity-gemini-mcp**](https://github.com/zz327455573/antigravity-gemini-mcp) — drive Antigravity from the Gemini app via remote MCP, zero install.
+- [**antigravity-gemini-mcp**](https://github.com/zz327455573/antigravity-gemini-mcp) (v1.1.0) — drive Antigravity from the Gemini app via remote MCP with OAuth 2.1 + PKCE, 25s hard-capped receipts & 180s fingerprint auto-resume (zero install).
 - [antigravity-desktop-zh-cn](https://github.com/zz327455573/antigravity-desktop-zh-cn) — Simplified Chinese localization pack for the desktop app.
 
 ---

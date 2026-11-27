@@ -349,7 +349,7 @@ def list_projects(_: None = Depends(verify_token)):
             if ws:
                 add_proj(ws, int(db_path.stat().st_mtime))
 
-    # 3. Direct subdirectories under workspace_roots (e.g. D:\AGY文件夹)
+    # 3. Direct subdirectories under workspace_roots (e.g. D:\YourWorkspace)
     for root in roots:
         rp = Path(root)
         if rp.exists() and rp.is_dir():
@@ -371,7 +371,7 @@ def create_project(req: CreateProjectReq, _: None = Depends(verify_token)):
         raise HTTPException(status_code=400, detail="项目名称不合法")
     cfg = load_config()
     roots = cfg.get("workspace_roots", [])
-    root = req.root_path or (roots[0] if roots else r"D:\AGY文件夹")
+    root = req.root_path or (roots[0] if roots else r"D:\YourWorkspace")
     target = Path(root) / name
     target.mkdir(parents=True, exist_ok=True)
     return {"ok": True, "name": name, "path": str(target.resolve())}
@@ -693,7 +693,7 @@ async def upload_file(
     if target_dir and os.path.isdir(target_dir):
         upload_dir = Path(target_dir)
     else:
-        base = Path(project_path) if project_path and os.path.isdir(project_path) else Path(roots[0] if roots else r"D:\AGY文件夹")
+        base = Path(project_path) if project_path and os.path.isdir(project_path) else Path(roots[0] if roots else r"D:\YourWorkspace")
         upload_dir = base / "_mobile_uploads"
     upload_dir.mkdir(parents=True, exist_ok=True)
 
@@ -728,7 +728,7 @@ def list_drives(_: None = Depends(verify_token)):
         ("🖥 云电脑桌面", user_home / "Desktop"),
         ("📥 下载目录", user_home / "Downloads"),
         ("📄 文档目录", user_home / "Documents"),
-        ("📁 AGY工作区", Path(r"D:\AGY文件夹")),
+        ("📁 Workspace", Path(r"D:\YourWorkspace")),
     ]:
         if p.exists() and p.is_dir():
             shortcuts.append({"name": label, "path": str(p.resolve())})
